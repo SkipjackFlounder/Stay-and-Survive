@@ -1,0 +1,9 @@
+Left click -- fire laser
+Right click -- place part
+Middle click -- fire missile
+
+WASD -- movement
+Space -- pause game (and place parts)
+Shift -- fire faster
+
+b -- toggles HUD
