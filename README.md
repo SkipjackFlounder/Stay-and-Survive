@@ -22,6 +22,7 @@ b -- toggles HUD
 A list of towers that you can build can be found in Source/Instructions
 
 Some things to know:
+
 Make sure you understand that shift causes rapid fire.
 Start building turrets quickly in the beginning when the enemies are weak.
 
