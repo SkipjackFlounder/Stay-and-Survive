@@ -19,7 +19,8 @@ Laser::Laser(sf::Vector2f position, sf::Vector2f direction, float orientation, b
 
 void Laser::update()
 {
-	position += direction * speed;
+	frameElapsed = framerateClock.restart();
+	position += direction * (speed * frameElapsed.asMicroseconds() / 10000);
 	beam.setPosition(position);
 }
 

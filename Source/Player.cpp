@@ -14,6 +14,7 @@ Player::Player()
 	missCapacity = 5;
 	laserDamage = 1.0;
 	justSpawned = true;
+	missAdd = 10;
 }
 
 Player::~Player()
@@ -29,38 +30,42 @@ Player::~Player()
 		delete &pickup[i];
 }
 
-void Player::update(Map* map)
+void Player::update(Map* map, bool buildMode)
 {
-	if(justSpawned)
+	frameElapsed = framerateClock.restart();
+	if (!buildMode)
 	{
+		if(justSpawned)
+		{
+			for(int i = 0; i < sizeof(pickup)/sizeof(pickup[0]); i++)
+				pickup[i] = *(new Pickup(map));
+			justSpawned = false;
+		}
+		if(laserHealth <= laserCapacity)
+			laserHealth += .1 * frameElapsed.asMicroseconds() / 10000;
 		for(int i = 0; i < sizeof(pickup)/sizeof(pickup[0]); i++)
-			pickup[i] = *(new Pickup(map));
-		justSpawned = false;
-	}
-	if(laserHealth <= laserCapacity)
-		laserHealth += .1;
-	for(int i = 0; i < sizeof(pickup)/sizeof(pickup[0]); i++)
-		if(pickup[i].update(position, PLAYER_RADIUS, map, part.size()))
-			part.push_back(*(new Part(part.size())));
-	for(int i = 0; i < tower.size(); i++)
-	{
-		bool onTower = tower[i].update(position);
-		if(onTower)
-			switch(tower[i].ID())
-			{
-				case towerShape::towerID::Hospital:
+			if(pickup[i].update(position, PLAYER_RADIUS, map, part.size()))
+				part.push_back(*(new Part(part.size())));
+		for(int i = 0; i < tower.size(); i++)
+		{
+			bool onTower = tower[i].update(position);
+			if(onTower)
+				switch(tower[i].ID())
 				{
-					if(health < 100)
-						health += .30;
-					break;
+					case towerShape::towerID::Hospital:
+					{
+						if(health < 100)
+							health += 60 * ((float)frameElapsed.asMilliseconds() / 10000.0);
+						break;
+					}
+					case towerShape::towerID::LaserPad:
+					{
+						if(laserHealth < laserCapacity)
+							laserHealth += .4 * ((float)frameElapsed.asMicroseconds() / 10000.0);
+						break;
+					}
 				}
-				case towerShape::towerID::LaserPad:
-				{
-					if(laserHealth < laserCapacity)
-						laserHealth += .25;
-					break;
-				}
-			}
+		}
 	}
 }
 
@@ -127,15 +132,19 @@ void Player::addTower(int type, sf::Vector2i pos)
 			case towerShape::towerID::WeaponPack:
 			{
 				partSet.removeTower(towerShape::towerID::WeaponPack, pos);
-				missCapacity += 10;
+				missCapacity += missAdd;
+				if (missAdd > 3)
+				{
+					missAdd --;
+				}
 				break;
 			}
 			case towerShape::towerID::WeaponUpgrade:
 			{
 				partSet.removeTower(towerShape::towerID::WeaponUpgrade, pos);
 				missCapacity += 5;
-				laserDamage += 1.15/sqrt(laserDamage);
-				laserCapacity *= 1.5;
+				laserDamage += .4 / sqrt(laserDamage);
+				laserCapacity *= 1.7;
 				//sound.play();
 				break;
 			}
@@ -204,34 +213,34 @@ void Player::orient(sf::Vector2f cursor)
 
 void Player::move(float x, float y, Map *map)
 {
-	static float speed = 2.1;
+	static float speed = 1.3;
 	float s = speed;
 	if(map->collide(sf::Vector2f(position.x + x * s, position.y + y * s), PLAYER_RADIUS))
 	{
 		if(!map->collide(sf::Vector2f(position.x, position.y + y * s), PLAYER_RADIUS))
 		{
-			body.move(0.0, (float)y * s);
-			position.y += y * s;
+			body.move(0.0, (float)y * s * frameElapsed.asMicroseconds() / 10000);
+			position.y += y * s * frameElapsed.asMicroseconds() / 10000;
 		}else if(!map->collide(sf::Vector2f(position.x + x * s, position.y), PLAYER_RADIUS))
 		{
-			body.move((float)x * s, 0.0);
-			position.x += x * s;
+			body.move((float)x * s * frameElapsed.asMicroseconds() / 10000, 0.0);
+			position.x += x * s * frameElapsed.asMicroseconds() / 10000;
 		}
 	}
 	while(map->collide(sf::Vector2f(position.x + x * s, position.y + y * s), PLAYER_RADIUS))
 		s -= 1;
 	if(s < 0)
 		s = 0;
-	body.move((float)x * s, (float)y * s);
-	position.x += x * s;
-	position.y += y * s;
+	body.move((float)x * s * frameElapsed.asMicroseconds() / 10000, (float)y * s * frameElapsed.asMicroseconds() / 10000);
+	position.x += x * s * frameElapsed.asMicroseconds() / 10000;
+	position.y += y * s * frameElapsed.asMicroseconds() / 10000;
 }
 
 std::pair<float, sf::Vector2f> Player::checkEnemyCollide(sf::Vector2f p, float radius, Map* map)
 {
 	if(helper::distance(p, position) < PLAYER_RADIUS + radius and health >= 0)
 	{
-		health--;
+		health -= ((float)frameElapsed.asMicroseconds()) / 10000.0;
 	}
 	for(int i = 0; i < shot.size(); i++)
 	{
@@ -259,7 +268,7 @@ std::pair<float, sf::Vector2f> Player::checkEnemyCollide(sf::Vector2f p, float r
 	for(int i = 0; i < tower.size(); i++)
 	{
 		sf::Vector2f tPos = tower[i].pos() + sf::Vector2f(48.0, 48.0);
-		if(tower[i].ID() == towerShape::towerID::Sentry and tower[i].clock() > 175 and helper::distance(tPos, p) < towerShape::sentryRange and !map->collideSegment(tPos, p))
+		if(tower[i].ID() == towerShape::towerID::Sentry and tower[i].clock() > 150 and helper::distance(tPos, p) < towerShape::sentryRange and !map->collideSegment(tPos, p))
 		{
 			tower[i].restartClock();
 			sf::Vector2f dir = p - tPos;

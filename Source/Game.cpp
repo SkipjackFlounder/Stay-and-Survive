@@ -32,10 +32,10 @@ Game::Game()
 	back.setTexture(tex[3]);
 	showInfoBar = true;
 	buildMode = false;
-	score = -30;
+	score = 0;
 	frameCount = 1;
 	/*Start the thread that updates the enemy pathfinding*/
-	thread.push_back(std::thread (&EnemyManager::update, &eManager, &map, &player));
+	thread.push_back(std::thread(&EnemyManager::update, &eManager, &map, &player));
 	thread[0].detach(); //Detach the thread so that it runs in the background
 }
 
@@ -43,17 +43,18 @@ void Game::update(sf::RenderWindow* window, sf::View* view)
 {
 	player.draw(window, &map);
 	map.draw(window);
-	if(!buildMode)
+	
+	float s = 10 * eManager.pointScore();
+	if(player.playerHealth() >= 0)
 	{
-		float s = 10 * eManager.pointScore();
-		if(player.playerHealth() >= 0)
-		{
-			player.update(&map);
-			score += s;
-		}
-		eManager.updateMovement(&map, &player, frameCount, buildMode);
-		frameCount++;
+		player.update(&map, buildMode);
+		score += s;
 	}
+	
+	
+	eManager.updateMovement(&map, &player, frameCount, buildMode);
+	frameCount++;
+	
 	eManager.draw(window);
 	if(player.playerHealth() <= 0)
 	{
@@ -119,18 +120,18 @@ void Game::handleInput(sf::RenderWindow* window)
 			showInfoBar = !showInfoBar;
 		if(helper::spacePressed())
 			buildMode = !buildMode;
-		static int i = 0;
 		if(helper::rightMouseClicked())
 			player.placePart(mousePos, &map); //Right click to place part
 		if(!buildMode)
 		{
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left) and player.playerLaserHealth() >= 2.0)
 			{	
-				if(i%5 == 0 or sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) //Normal fire: once every five frames
+				if(fireClock.getElapsedTime().asMilliseconds() > 70 or (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) and fireClock.getElapsedTime().asMilliseconds() > 16)) //Normal fire: once every five frames
+				{
+					fireClock.restart();
 					player.fireLaser(mousePos);
-				i++;
-			}else
-				i = 0;
+				}
+			}
 			if (helper::middleMouseClicked() and player.playerMissileCapacity() > 0) //Middle click to fire missile
 				player.fireMissile(mousePos);
 		}

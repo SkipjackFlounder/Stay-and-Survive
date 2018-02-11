@@ -24,13 +24,16 @@ class Player
 		PartSet partSet;
 		float laserHealth;
 		int missCapacity;
+		int missAdd;
 		Pickup pickup[5];
 		float laserDamage, laserCapacity;
 		bool justSpawned;
+		sf::Clock framerateClock;
+		sf::Time frameElapsed;
 	public:
 		Player();
 		~Player();
-		void update(Map* map);
+		void update(Map* map, bool buildMode);
 		void addTower(int type, sf::Vector2i pos);
 		void draw(sf::RenderWindow *window, Map *map);
 		void orient(sf::Vector2f cursor);

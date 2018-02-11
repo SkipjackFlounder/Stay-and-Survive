@@ -9,6 +9,11 @@ class EnemyManager
 		int points;
 		void addPoints(int);
 		std::atomic<bool> buildMode;
+		sf::Clock spawnClock;
+		float spawnCharge;
+		sf::Clock bossClock;
+		float bossCharge;
+		float totalElapsed;
 	public:
 		EnemyManager();
 		~EnemyManager();

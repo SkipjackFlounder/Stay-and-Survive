@@ -11,6 +11,7 @@
 #include <string>
 #include <thread>
 #include <utility>
+#include <functional>
 #include <mutex>
 #include <atomic>
 #include <cmath>

@@ -17,12 +17,15 @@ class Enemy
 		sf::Texture tex;
 		float radius;
 		bool isBoss;
+		sf::Clock framerateClock;
+		sf::Time frameElapsed;
+		float moveCharge;
 	public: 
 		Enemy();
-		Enemy(sf::Vector2f, float);
+		Enemy(sf::Vector2f, float, Map*);
 		void updateDirection(Map* map, Player* player);
 		void updateCollision(Map* map, std::vector<sf::Vector2f>* unit);
-		bool update(Player* player, Map* map);
+		bool update(Player* player, Map* map, bool buildMode);
 		void move(sf::Vector2f);
 		sf::Vector2f pos();
 		void draw(sf::RenderWindow*);

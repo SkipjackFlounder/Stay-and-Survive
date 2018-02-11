@@ -4,7 +4,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(SW, SH), "Top Down Survival", sf::Style::Fullscreen);
     //Create Window at fullscreen
-    window.setFramerateLimit(60);
+    //window.setFramerateLimit(20);
     //Set frame limit - hopefully I will replace this in the future with a dynamic framerate
     sf::View view(sf::FloatRect(0, 0, SW, SH));
     window.setView(view);

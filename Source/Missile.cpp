@@ -17,9 +17,10 @@ Missile::Missile(sf::Vector2f position, sf::Vector2f direction, float orientatio
 
 void Missile::update()
 {
+	frameElapsed = framerateClock.restart();
 	if(!exploded)
-		position += direction * speed;
-		beam.setPosition(position);
+		position += direction * (speed * frameElapsed.asMicroseconds() / 10000);
+	beam.setPosition(position);
 }
 
 void Missile::blowUp()

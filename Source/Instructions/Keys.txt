@@ -4,6 +4,6 @@ Middle click -- fire missile
 
 WASD -- movement
 Space -- pause game (and place parts)
-Shift -- fire faster
+Shift -- rapid fire
 
 b -- toggles HUD

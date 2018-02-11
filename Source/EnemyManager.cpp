@@ -2,10 +2,13 @@
 
 EnemyManager::EnemyManager()
 {
-	for(int i = 0; i < 3; i++)
-		enemy.push_back(*(new Enemy(sf::Vector2f(90, -1000), 8)));
 	points = 0;
 	buildMode = false;
+	spawnClock.restart();
+	bossClock.restart();
+	spawnCharge = 0;
+	bossCharge = 0;
+	totalElapsed = 0;
 }
 
 EnemyManager::~EnemyManager()
@@ -24,7 +27,7 @@ void EnemyManager::update(Map* map, Player* player)
 				std::lock_guard<std::mutex> lock(mtx); //RAII in case the thread is killed without an unlock
 				enemy[i].updateDirection(map, player);
 			}
-			sf::sleep(sf::milliseconds(1)); //Give the updateMovement function a millisecond to catch up
+			sf::sleep(sf::milliseconds(5)); //Give the updateMovement function a few millisecond to catch up
 			//Alternatives to this include joining this thread rather than attaching
 		}
 	}
@@ -34,49 +37,35 @@ void EnemyManager::updateMovement(Map* map, Player* player, int count, bool buil
 {
 	mtx.lock();
 	int killed = 0;
+	
+	if (!buildMode)
+	{
+		spawnCharge += spawnClock.restart().asSeconds();
+		bossCharge += bossClock.restart().asSeconds();
+	}
+	spawnClock.restart();
+	bossClock.restart();
+	
 	for(int i = 0; i < enemy.size(); i++)
-		if(enemy[i].update(player, map))
+		if(enemy[i].update(player, map, buildMode))
 		{
 			killed ++;
-			if(enemy[i].isABoss())
-				enemy[i] = *(new Enemy(sf::Vector2f(90, -1000), enemy.size()*2 + 5));
-			int c = rand()%4;
-			switch(c)
-			{
-				case 0:
-					enemy[i].move(sf::Vector2f((float)(rand()%(map->dimensions().x - 4)) * BLOCK_SIZE + 2 * BLOCK_SIZE, -2300));
-					break;
-				case 1:
-					enemy[i].move(sf::Vector2f(-2300, (float)(rand()%(map->dimensions().y - 4)) * BLOCK_SIZE + 2 * BLOCK_SIZE));
-					break;
-				case 2:
-					enemy[i].move(sf::Vector2f((float)(rand()%(map->dimensions().x - 4)) * BLOCK_SIZE + 2 * BLOCK_SIZE, map->dimensions().y * BLOCK_SIZE + 2300));
-					break;
-				case 3:
-					enemy[i].move(sf::Vector2f((float)(map->dimensions().x) * BLOCK_SIZE + 2300, (float)(rand()%(map->dimensions().y - 4)) * BLOCK_SIZE + 2 * BLOCK_SIZE));
-					break;
-			}
+			enemy.erase(enemy.begin() + i);
+			i -= 1;
 		}
-	if(count % (60 * 23) == 0 and enemy.size() < 52)
+	
+	/* Spawn an enemy every 4.5 seconds */
+	if(spawnCharge > 4.5 and enemy.size() < 100)
 	{
-		enemy.push_back(*(new Enemy(sf::Vector2f(90, -1000), enemy.size()*2 + 5)));
+		totalElapsed += 1;
+		spawnCharge = 0;
+		enemy.push_back(*(new Enemy(sf::Vector2f(90, -1000), pow(totalElapsed, 0.8) * 5, map)));
 	}
-	if(count % (12000) == 0 and enemy.size() < 64)
+	/* Spawn a boss every 3 minutes */
+	if(bossCharge > 180 and enemy.size() < 104)
 	{
-		float health = enemy.size() * enemy.size() + 270;
-		if(enemy.size() >= 16)
-			health += (float)(count)/62.0;
-		if(enemy.size() >= 30)
-			health *= 1.2;
-		if(count > (60 * 60 * 15))
-			health *= 1.3;
-		if(count > (60 * 60 * 20))
-			health *= 1.4;
-		if(count > (60 * 60 * 25))
-			health *= 1.5;
-		if(count > (60 * 60 * 30))
-			health *= 1.6;
-		std::cout << health << " ";
+		float health = totalElapsed * 25;
+		bossCharge = 0;
 		enemy.push_back(*(new Boss(sf::Vector2f(90, -1000), health, map)));
 	}
 	std::vector<sf::Vector2f> position = *(new std::vector<sf::Vector2f>());

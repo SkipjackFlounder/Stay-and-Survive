@@ -16,6 +16,7 @@ class Game
 		sf::Texture tex[4];
 		bool showInfoBar;
 		bool buildMode;
+		sf::Clock fireClock;
 	public:
 		Game();
 		void update(sf::RenderWindow*, sf::View*);
