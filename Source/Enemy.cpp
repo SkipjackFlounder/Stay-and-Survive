@@ -129,9 +129,9 @@ bool Enemy::update(Player* player, Map* map, bool buildMode)
 		std::pair<float, sf::Vector2f> n = player->checkEnemyCollide(position, radius, map);
 		health -= n.first;
 		sf::Vector2f v = helper::unitVector(sf::Vector2f(0, 0), n.second);
-		int knockBack = 5.5;
+		float knockBack = 5.0;
 		if(radius > 16)
-			knockBack = 1.0;
+			knockBack = 0.3;
 		if(n.first >= 1.0)
 			position += sf::Vector2f(v.x * knockBack, v.y * knockBack);
 		

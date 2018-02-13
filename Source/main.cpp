@@ -21,7 +21,7 @@ int main()
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			window.close();
 			
-        window.clear(sf::Color(230, 230, 230));
+        window.clear(sf::Color(100, 100, 100));
         	game.update(&window, &view);
         	game.handleInput(&window);
         window.display();
