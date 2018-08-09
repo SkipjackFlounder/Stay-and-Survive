@@ -55,13 +55,13 @@ void Player::update(Map* map, bool buildMode)
 					case towerShape::towerID::Hospital:
 					{
 						if(health < 100)
-							health += 60 * ((float)frameElapsed.asMilliseconds() / 10000.0);
+							health += 90 * ((float)frameElapsed.asMilliseconds() / 10000.0);
 						break;
 					}
 					case towerShape::towerID::LaserPad:
 					{
 						if(laserHealth < laserCapacity)
-							laserHealth += .4 * ((float)frameElapsed.asMicroseconds() / 10000.0);
+							laserHealth += .45 * ((float)frameElapsed.asMicroseconds() / 10000.0);
 						break;
 					}
 				}
@@ -86,7 +86,7 @@ void Player::placePart(sf::Vector2f mPos, Map *map)
 			part.erase(part.begin() + part.size() - 1);
 			std::pair<towerShape::towerID, sf::Vector2i> newTower = partSet.addPart(mPos);
 			addTower(newTower.first, newTower.second); 
-		}else if(part.size() < 3 and partSet.partExist(mPos))
+		}else if(partSet.partExist(mPos))
 		{
 			part.push_back(*(new Part(part.size())));
 			partSet.removePart(mPos);

@@ -74,13 +74,19 @@ void Game::update(sf::RenderWindow* window, sf::View* view)
 		missileText.setOrigin(6.0 * (int)(log(player.playerMissileCapacity())/log(10.0) + 1), 12.0);
 		missileText.setString(helper::intToString(player.playerMissileCapacity()));
 		window->draw(missileText);
+		missileText.setPosition(sf::Vector2f(100, 717.0));
+		missileText.setOrigin(6.0 * (int)(log(player.partCount())/log(10.0) + 1), 12.0);
+		missileText.setString(helper::intToString(player.partCount()));
+		window->draw(missileText);
+		missileText.setPosition(100.0, 539.0);
 		if(buildMode)
 			window->draw(pausedText);
+			/*
 		for(int i = 0; i < player.partCount(); i++)
 		{
 			Part part = Part(i);
 			part.draw(window); //Draw in the overlay
-		}
+		}*/
 		scoreText.setString("Score: " + helper::intToString(score));
 		window->draw(scoreText);
 	}

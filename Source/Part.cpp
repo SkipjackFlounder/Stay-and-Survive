@@ -128,7 +128,7 @@ Pickup::Pickup(Map* map)
 
 bool Pickup::update(sf::Vector2f playerPos, float radius, Map *map, int partCount)
 {
-	if(helper::distance(playerPos, body.getPosition()) < radius + 8 and partCount < 3)
+	if(helper::distance(playerPos, body.getPosition()) < radius + 8)
 	{
 		relocate(map);
 		return true;
