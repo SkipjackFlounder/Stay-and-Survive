@@ -1,15 +1,23 @@
 #include "Network.hpp"
 
+void Liason::listen()
+{
+	while (true)
+	{
+		sf::Packet packet;
+		client.receive(packet);
+		mtx.lock();
+		if(packet >> line)
+		{
+		
+		}
+		mtx.unlock();
+	}
+}
+
 std::string Liason::retrieve()
 {
-	sf::Packet packet;
-	client.receive(packet);
-	std::string line;
-	if(packet >> line)
-	{
-		return line;
-	}
-	return "";
+	return line;
 }
 
 Liason::Liason()
@@ -40,6 +48,8 @@ Host::Host() : Liason()
 		std::cout << "Cannot connect to client\n";
 	}
 	std::cout << "Connected\n";
+	std::thread receiver (&Liason::listen, this);
+	receiver.detach();
 }
 
 Client::Client() : Liason()
@@ -59,4 +69,6 @@ Client::Client() : Liason()
 			std::cout << "Cannot connect to host\n";
 		}
 	}while(status != sf::Socket::Done);
+	std::thread receiver (&Liason::listen, this);
+	receiver.detach();
 }
