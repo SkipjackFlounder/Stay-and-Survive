@@ -172,7 +172,7 @@ void Game::handleMessage(std::string message, sf::RenderWindow *window)
 			case 'p':
 				std::vector<std::string> numsStr = split(command.substr(1), ' ');
 				std::vector<float> nums;
-				for (std::string str : numsStr)
+				for (std::string &str : numsStr)
 				{
 					nums.push_back(std::stof(str));
 				}
