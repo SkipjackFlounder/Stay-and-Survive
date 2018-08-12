@@ -23,6 +23,8 @@ int main()
 		
 	//Create Window at fullscreen
     sf::RenderWindow window(sf::VideoMode(SW, SH), "Top Down Survival", sf::Style::Fullscreen);
+    sf::Event event;
+    window.pollEvent(event)
     
     sf::View view(sf::FloatRect(0, 0, SW, SH));
     window.setView(view);
@@ -34,7 +36,7 @@ int main()
 	
     while (window.isOpen())
     {
-        sf::Event event;
+        
         
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			window.close();
@@ -49,7 +51,9 @@ int main()
         window.clear(sf::Color(150, 150, 150));
         	game.update(&window, &view);
         	game.handleInput(&window);
-        	game.handleMessage(liason->retrieve(), &window);
+        	std::string str = liason->retrieve();
+        	game.handleMessage(str, &window);
+        	std::cout << str << "\n";
         	liason->send(game.messageUpdates());
         window.display();
         //std::cout << 1000.0/c.restart().asMilliseconds() << " ";
