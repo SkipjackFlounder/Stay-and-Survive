@@ -174,6 +174,7 @@ void Game::handleMessage(std::string message, sf::RenderWindow *window)
 				std::vector<float> nums;
 				for (std::string &str : numsStr)
 				{
+					std::
 					nums.push_back(std::stof(str));
 				}
 				player.drawAt(window, nums);
@@ -184,9 +185,11 @@ void Game::handleMessage(std::string message, sf::RenderWindow *window)
 std::string Game::messageUpdates()
 {
 	std::string message;
-	message += "p ";
+	message += "p";
 	message += std::to_string(player.pos().x);
+	message += " ";
 	message += std::to_string(player.pos().y);
+	message += " ";
 	message += std::to_string(player.getRotation());
 	return message;
 }
