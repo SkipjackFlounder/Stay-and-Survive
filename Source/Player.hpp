@@ -10,6 +10,7 @@ class Player
 {
 	private:
 		sf::Sprite body;
+		sf::Sprite otherBody;
 		sf::Texture tex;
 		sf::SoundBuffer buffer;
 		sf::Sound sound;
@@ -36,10 +37,12 @@ class Player
 		void update(Map* map, bool buildMode);
 		void addTower(int type, sf::Vector2i pos);
 		void draw(sf::RenderWindow *window, Map *map);
+		void drawAt(sf::RenderWindow *window, std::vector<float>&);
 		void orient(sf::Vector2f cursor);
 		void move(float x, float y, Map*);
 		std::pair<float, sf::Vector2f> checkEnemyCollide(sf::Vector2f, float, Map* map);
 		sf::Vector2f pos();
+		float getRotation();
 		float playerHealth();
 		float playerLaserHealth();
 		float playerLaserCapacity();

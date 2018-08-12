@@ -21,4 +21,6 @@ class Game
 		Game();
 		void update(sf::RenderWindow*, sf::View*);
 		void handleInput(sf::RenderWindow*);
+		void handleMessage(std::string, sf::RenderWindow*);
+		std::string messageUpdates();
 };

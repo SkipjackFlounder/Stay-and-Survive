@@ -8,6 +8,11 @@ Player::Player()
 	body.setScale((float)64/(float)512, (float)64/(float)512);
 	body.setOrigin(256, 256);
 	body.setPosition(100, 100);
+	tex.loadFromFile("Resources/PlayerBlack.png");
+	otherBody.setTexture(tex);
+	otherBody.setScale((float)64/(float)512, (float)64/(float)512);
+	otherBody.setOrigin(256, 256);
+	otherBody.setPosition(100, 100);
 	position.x = 100; position.y = 100;
 	laserCapacity = 100;
 	laserHealth = laserCapacity;
@@ -176,8 +181,14 @@ void Player::draw(sf::RenderWindow *window, Map *map)
 	}
 	for(int i = 0; i < sizeof(pickup)/sizeof(pickup[0]); i++)
 		pickup[i].draw(window);
+	window->draw(body);		
+}
+
+void Player::drawAt(sf::RenderWindow *window, std::vector<float>& nums)
+{
+	otherBody.setPosition(nums[0], nums[1]);
+	otherBody.setRotation(nums[2]);
 	window->draw(body);
-		
 }
 
 float Player::playerHealth()
@@ -283,6 +294,11 @@ std::pair<float, sf::Vector2f> Player::checkEnemyCollide(sf::Vector2f p, float r
 sf::Vector2f Player::pos()
 {
 	return this->position;
+}
+
+float Player::getRotation()
+{
+	return this->rotation;
 }
 
 void Player::fireLaser(sf::Vector2f cursor)

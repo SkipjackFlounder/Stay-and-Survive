@@ -52,7 +52,7 @@ void Game::update(sf::RenderWindow* window, sf::View* view)
 	}
 	
 	
-	eManager.updateMovement(&map, &player, frameCount, buildMode);
+	//eManager.updateMovement(&map, &player, frameCount, buildMode);
 	frameCount++;
 	
 	eManager.draw(window);
@@ -142,4 +142,51 @@ void Game::handleInput(sf::RenderWindow* window)
 				player.fireMissile(mousePos);
 		}
     }
+}
+
+/* Copied from https://stackoverflow.com/questions/236129/the-most-elegant-way-to-iterate-the-words-of-a-string
+Splits a string into a parts deliminated by a character */
+template<typename Out>
+void split(const std::string &s, char delim, Out result) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        *(result++) = item;
+    }
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, std::back_inserter(elems));
+    return elems;
+}
+/* -------------------------- */
+
+void Game::handleMessage(std::string message, sf::RenderWindow *window)
+{
+	std::vector<std::string> commands = split(message, '\n');
+	for (std::string command : commands)
+	{
+		switch(command.at(0))
+		{
+			case 'p':
+				std::vector<std::string> numsStr = split(command.substr(1), ' ');
+				std::vector<float> nums;
+				for (std::string str : numsStr)
+				{
+					nums.push_back(std::stof(str));
+				}
+				player.drawAt(window, nums);
+		}
+	}
+}
+
+std::string Game::messageUpdates()
+{
+	std::string message;
+	message += "p ";
+	message += std::to_string(player.pos().x);
+	message += std::to_string(player.pos().y);
+	message += std::to_string(player.getRotation());
+	return message;
 }
