@@ -24,7 +24,7 @@ int main()
 	//Create Window at fullscreen
     sf::RenderWindow window(sf::VideoMode(SW, SH), "Top Down Survival", sf::Style::Fullscreen);
     sf::Event event;
-    window.pollEvent(event)
+    window.pollEvent(event);
     
     sf::View view(sf::FloatRect(0, 0, SW, SH));
     window.setView(view);
