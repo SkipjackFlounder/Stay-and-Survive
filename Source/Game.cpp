@@ -42,6 +42,7 @@ Game::Game()
 void Game::update(sf::RenderWindow* window, sf::View* view)
 {
 	player.draw(window, &map);
+	player.drawAt(window, otherPlayerFloats);
 	map.draw(window);
 	
 	float s = 10 * eManager.pointScore();
@@ -176,7 +177,7 @@ void Game::handleMessage(std::string message, sf::RenderWindow *window)
 				{
 					nums.push_back(std::stof(str));
 				}
-				player.drawAt(window, nums);
+				otherPlayerFloats = nums;
 		}
 	}
 }

@@ -51,7 +51,6 @@ int main()
         	game.handleInput(&window);
         	std::string str = liason->retrieve();
         	game.handleMessage(str, &window);
-        	std::cout << str << "\n";
         	liason->send(game.messageUpdates());
         window.display();
         //std::cout << 1000.0/c.restart().asMilliseconds() << " ";

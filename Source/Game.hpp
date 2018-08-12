@@ -10,6 +10,7 @@ class Game
 		int frameCount; //Counts how many frames since program began
 		int score;
 		std::vector<std::thread> thread; //(&EnemyManager::update, this, map, player);
+		std::vector<float> otherPlayerFloats;
 		sf::Font font;
 		sf::Text missileText, scoreText, pausedText;
 		sf::Sprite frame, healthBar, laserBar, back;
