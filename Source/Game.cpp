@@ -174,7 +174,6 @@ void Game::handleMessage(std::string message, sf::RenderWindow *window)
 				std::vector<float> nums;
 				for (std::string &str : numsStr)
 				{
-					std::
 					nums.push_back(std::stof(str));
 				}
 				player.drawAt(window, nums);
