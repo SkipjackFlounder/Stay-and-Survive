@@ -12,6 +12,7 @@ class Player
 		sf::Sprite body;
 		sf::Sprite otherBody;
 		sf::Texture tex;
+		sf::Texture tex1;
 		sf::SoundBuffer buffer;
 		sf::Sound sound;
 		sf::Vector2f position;

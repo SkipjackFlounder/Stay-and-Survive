@@ -8,8 +8,8 @@ Player::Player()
 	body.setScale((float)64/(float)512, (float)64/(float)512);
 	body.setOrigin(256, 256);
 	body.setPosition(100, 100);
-	tex.loadFromFile("Resources/PlayerBlack.png");
-	otherBody.setTexture(tex);
+	tex1.loadFromFile("Resources/PlayerBlack.png");
+	otherBody.setTexture(tex1);
 	otherBody.setScale((float)64/(float)512, (float)64/(float)512);
 	otherBody.setOrigin(256, 256);
 	otherBody.setPosition(100, 100);
