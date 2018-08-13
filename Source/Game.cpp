@@ -34,6 +34,11 @@ Game::Game()
 	buildMode = false;
 	score = 0;
 	frameCount = 1;
+	
+	otherPlayerFloats.push_back(0.0);
+	otherPlayerFloats.push_back(0.0);
+	otherPlayerFloats.push_back(0.0);
+	
 	/*Start the thread that updates the enemy pathfinding*/
 	thread.push_back(std::thread(&EnemyManager::update, &eManager, &map, &player));
 	thread[0].detach(); //Detach the thread so that it runs in the background

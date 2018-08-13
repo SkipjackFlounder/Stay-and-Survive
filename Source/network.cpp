@@ -27,9 +27,14 @@ Liason::Liason()
 
 void Liason::send(std::string data)
 {
-	sf::Packet packet;
-	packet << data;
-	client.send(packet);
+	/* Every 100 milliseconds, send the data to the other person to sync the game */
+	if (netClock.getElapsedTime().asMilliseconds() > 100)
+	{
+		sf::Packet packet;
+		packet << data;
+		client.send(packet);
+		netClock.restart();
+	}
 }
 
 Host::Host() : Liason()

@@ -14,6 +14,7 @@ class Liason
 		std::atomic<bool> quit;
 		std::string line;
 		std::mutex mtx;
+		sf::Clock netClock;
 	public:
 		Liason();
 		virtual void send(std::string);

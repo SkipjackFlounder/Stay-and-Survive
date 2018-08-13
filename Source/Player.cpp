@@ -188,7 +188,7 @@ void Player::drawAt(sf::RenderWindow *window, std::vector<float>& nums)
 {
 	otherBody.setPosition(nums[0], nums[1]);
 	otherBody.setRotation(nums[2]);
-	window->draw(body);
+	window->draw(otherBody);
 }
 
 float Player::playerHealth()
