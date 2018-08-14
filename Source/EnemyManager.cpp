@@ -116,23 +116,29 @@ std::string EnemyManager::getMessage()
 
 void EnemyManager::erase()
 {
+	mtx.lock();
 	enemy = std::vector<Enemy>();
+	mtx.unlock();
 }
 
 void EnemyManager::add(std::vector<float>& parameters, Map *map, bool boss)
 {
+	mtx.lock();
 	if (!boss)
 	{
 		enemy.push_back(Enemy(sf::Vector2f(parameters[0], parameters[1]), parameters[2], parameters[3], map));
 	} else {
 		enemy.push_back(Boss(sf::Vector2f(parameters[0], parameters[1]), parameters[2], parameters[3], map));
 	}
+	mtx.unlock();
 }
 
 void EnemyManager::draw(sf::RenderWindow* window)
 {
+	mtx.lock();
 	for(int i = 0; i < enemy.size(); i++)
 	{
 		enemy[i].draw(window);
 	}
+	mtx.unlock();
 }
