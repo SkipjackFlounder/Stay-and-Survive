@@ -58,7 +58,7 @@ void Game::update(sf::RenderWindow* window, sf::View* view)
 	}
 	
 	
-	//eManager.updateMovement(&map, &player, frameCount, buildMode);
+	eManager.updateMovement(&map, &player, frameCount, buildMode);
 	frameCount++;
 	
 	eManager.draw(window);
