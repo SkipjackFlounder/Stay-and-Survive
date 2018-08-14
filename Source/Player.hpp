@@ -43,6 +43,7 @@ class Player
 		void move(float x, float y, Map*);
 		std::pair<float, sf::Vector2f> checkEnemyCollide(sf::Vector2f, float, Map* map);
 		sf::Vector2f pos();
+		sf::Vector2f otherPos();
 		float getRotation();
 		float playerHealth();
 		float playerLaserHealth();

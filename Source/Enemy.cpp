@@ -37,6 +37,12 @@ Enemy::Enemy(sf::Vector2f pos, float h, Map* map)
 	isBoss = false;
 }
 
+Enemy::Enemy(sf::Vector2f pos, float rotation, float h, Map* map)
+{
+	Enemy(pos, h, map);
+	this->rotation = rotation;
+}
+
 Boss::Boss(sf::Vector2f pos, float h, Map* map)
 {
 	radius = 32;
@@ -69,6 +75,12 @@ Boss::Boss(sf::Vector2f pos, float h, Map* map)
 	isBoss = true;
 }
 
+Boss::Boss(sf::Vector2f pos, float rotation, float h, Map* map)
+{
+	Boss(pos, h, map);
+	this->rotation = rotation;
+}
+
 void Enemy::updateDirection(Map* map, Player* player)
 {
 	if(position.x < 10)
@@ -90,7 +102,12 @@ void Enemy::updateDirection(Map* map, Player* player)
 	}
 	Player* playerCopy = player;
 	Map* mapCopy = map;
-	direction = mapCopy->find(position, playerCopy->pos(), radius);
+	sf::Vector2f destinationPos = playerCopy->pos();
+	if (helper::distance(playerCopy->pos(), this->position) > helper::distance(playerCopy->otherPos(), this->position))
+	{
+		destinationPos = playerCopy->otherPos();
+	}
+	direction = mapCopy->find(position, destinationPos, radius);
 }
 
 void Enemy::updateCollision(Map* map, std::vector<sf::Vector2f>* unit)
@@ -166,6 +183,16 @@ void Enemy::move(sf::Vector2f pos)
 sf::Vector2f Enemy::pos()
 {
 	return position;
+}
+
+float Enemy::getRotation()
+{
+	return this->rotation;
+}
+
+float Enemy::getHealth()
+{
+	return this->health;
 }
 
 bool Enemy::isABoss()

@@ -93,6 +93,42 @@ int EnemyManager::pointScore()
 	return p;
 }
 
+std::string EnemyManager::getMessage()
+{
+	std::string out;
+	mtx.lock();
+	for(int i = 0; i < enemy.size(); i++)
+	{
+		if (enemy[i].isABoss())
+		{
+			out += "b";
+		} else {
+			out += "e";
+		}
+		out += std::to_string(enemy[i].pos().x) + " ";
+		out += std::to_string(enemy[i].pos().y) + " ";
+		out += std::to_string(enemy[i].getRotation()) + " ";
+		out += std::to_string(enemy[i].getHealth()) + "\n";
+	}
+	mtx.unlock();
+	return out;
+}
+
+void EnemyManager::erase()
+{
+	enemy = std::vector<Enemy>();
+}
+
+void EnemyManager::add(std::vector<float>& parameters, Map *map, bool boss)
+{
+	if (!boss)
+	{
+		enemy.push_back(Enemy(sf::Vector2f(parameters[0], parameters[1]), parameters[2], parameters[3], map));
+	} else {
+		enemy.push_back(Boss(sf::Vector2f(parameters[0], parameters[1]), parameters[2], parameters[3], map));
+	}
+}
+
 void EnemyManager::draw(sf::RenderWindow* window)
 {
 	for(int i = 0; i < enemy.size(); i++)

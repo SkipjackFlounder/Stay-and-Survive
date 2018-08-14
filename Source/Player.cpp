@@ -296,6 +296,11 @@ sf::Vector2f Player::pos()
 	return this->position;
 }
 
+sf::Vector2f Player::otherPos() 
+{
+	return otherBody.getPosition();
+}
+
 float Player::getRotation()
 {
 	return this->rotation;

@@ -20,5 +20,8 @@ class EnemyManager
 		void update(Map* map, Player* player);
 		void updateMovement(Map* map, Player* player, int, bool);
 		int pointScore();
+		std::string getMessage();
+		void erase();
+		void add(std::vector<float>&, Map*, bool);
 		void draw(sf::RenderWindow*);
 };

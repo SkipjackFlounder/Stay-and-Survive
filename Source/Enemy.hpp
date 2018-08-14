@@ -23,11 +23,14 @@ class Enemy
 	public: 
 		Enemy();
 		Enemy(sf::Vector2f, float, Map*);
+		Enemy(sf::Vector2f, float, float, Map*);
 		void updateDirection(Map* map, Player* player);
 		void updateCollision(Map* map, std::vector<sf::Vector2f>* unit);
 		bool update(Player* player, Map* map, bool buildMode);
 		void move(sf::Vector2f);
 		sf::Vector2f pos();
+		float getRotation();
+		float getHealth();
 		void draw(sf::RenderWindow*);
 		bool isABoss();
 };
@@ -37,6 +40,7 @@ class Boss: public Enemy
 	private:
 	public:
 		Boss(sf::Vector2f, float, Map*);
+		Boss(sf::Vector2f, float, float, Map*);
 };
 
 #endif

@@ -171,18 +171,54 @@ std::vector<std::string> split(const std::string &s, char delim) {
 void Game::handleMessage(std::string message, sf::RenderWindow *window)
 {
 	std::vector<std::string> commands = split(message, '\n');
+	bool syncEnemies = false;
 	for (std::string command : commands)
 	{
 		switch(command.at(0))
 		{
 			case 'p':
-				std::vector<std::string> numsStr = split(command.substr(1), ' ');
-				std::vector<float> nums;
-				for (std::string &str : numsStr)
 				{
-					nums.push_back(std::stof(str));
+					std::vector<std::string> numsStr = split(command.substr(1), ' ');
+					std::vector<float> nums;
+					for (std::string &str : numsStr)
+					{
+						nums.push_back(std::stof(str));
+					}
+					otherPlayerFloats = nums;
 				}
-				otherPlayerFloats = nums;
+				break;
+			case 'e':
+				{
+					if (!syncEnemies)
+					{
+						eManager.erase();
+						syncEnemies = true;
+					}
+					std::vector<std::string> numsStr = split(command.substr(1), ' ');
+					std::vector<float> nums;
+					for (std::string &str : numsStr)
+					{
+						nums.push_back(std::stof(str));
+					}
+					eManager.add(nums, &map, false);
+				}
+				break;
+			case 'b':
+				{
+					if (!syncEnemies)
+					{
+						eManager.erase();
+						syncEnemies = true;
+					}
+					std::vector<std::string> numsStr = split(command.substr(1), ' ');
+					std::vector<float> nums;
+					for (std::string &str : numsStr)
+					{
+						nums.push_back(std::stof(str));
+					}
+					eManager.add(nums, &map, true);
+				}
+				break;
 		}
 	}
 }
@@ -196,5 +232,7 @@ std::string Game::messageUpdates()
 	message += std::to_string(player.pos().y);
 	message += " ";
 	message += std::to_string(player.getRotation());
+	message += "\n";
+	message += eManager.getMessage();
 	return message;
 }
