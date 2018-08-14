@@ -24,8 +24,10 @@ void EnemyManager::update(Map* map, Player* player)
 		for(int i = 0; i < enemy.size(); i++)
 		{
 			{
-				std::lock_guard<std::mutex> lock(mtx); //RAII in case the thread is killed without an unlock
+				//std::lock_guard<std::mutex> lock(mtx); //RAII in case the thread is killed without an unlock
+				mtx.lock();
 				enemy[i].updateDirection(map, player);
+				mtx.unlock();
 			}
 			sf::sleep(sf::milliseconds(5)); //Give the updateMovement function a few millisecond to catch up
 			//Alternatives to this include joining this thread rather than attaching
